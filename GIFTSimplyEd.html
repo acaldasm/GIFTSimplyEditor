@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta http-equiv="x-ua-compatible" content="IE=Edge"/>
+  <title>Editeur GIFT</title>
+  <link rel="stylesheet" href="at/css/jquery.atwho.css" />
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script type="text/javascript" src="at/js/jquery.caret.js"></script>
+  <script type="text/javascript" src="at/js/jquery.atwho.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $.fn.atwho.debug = true
+
+    var taccents = decodeURI("J%C3%A9r%C3%A9my") // Jérémy
+
+    //Load from a file instead of hardcoded
+    var tquestions = [ "::Vrai/Faux-Titre de la question ::Proposition vraie.{T}|Format 'Vrai' pour type de question 'Vrai/Faux'",
+                  "::Vrai/Faux-Titre de la question ::Proposition vraie.{TRUE}|Format 'Vrai' pour type de question 'Vrai/Faux",
+                  "::Faux/Vrai-Titre de la question ::Proposition fausse.{F}|Format 'Faux' pour type de question Vrai/Faux",
+                  "::Faux/Vrai-Titre de la question ::Proposition fausse.{FALSE}|Format 'Faux' pour type de question Vrai/Faux",
+                  "::ReponseCourte-Titre de la question :: Texte proposition {=ValeurValide}|Format pour type de question 'Reponse courte'",
+                  "::ReponseCourte-Titre de la question :: Texte proposition {=ValeurValide1 =ValeurValide2} texte supplemantaire.|Format pour type de question 'Reponse courte'",
+                  "::ChoixMultiple-Titre de la question ::Proposition ou question? { =ReponseCorrecte ~ReponseErronee }|Format pour type de question 'Choix Multiple'"]
+
+    //Load from a file instead of hardcoded
+    var tanswers = ["{T}", "{TRUE}", "{F}", "{FALSE}", "{=ValeurValide}", "{=ValeurValide1 =ValeurValide2} texte supplemantaire.", "{ =ReponseCorrecte ~ReponseErronee }"]
+
+    var tquestions = $.map(tquestions,function(value,i) {
+      var parts=value.split("|");
+      //return {'id':i,'name':value,'description':value+" - Texte descriptif sur le type de question"};
+      return {'id':i,'question':parts[0],'description':parts[1]};
+    });
+
+    var tanswers = $.map(tanswers, function(value, i) {
+      return {key:value, question:value}
+    });
+
+    var question_config = {
+      at: "::",
+      data: tquestions,
+      headerTpl: '<div class="atwho-header">Type de question <small>&#8593;&nbsp;&#8595;&nbsp;</small></div>',
+      insertTpl: '${question}',
+      displayTpl: "<li>${question} <small>${description}</small></li>",
+      limit: 200
+    }
+
+    var answer_config = {
+      at: "{",
+      data: tanswers,
+      displayTpl: "<li>${question}</li>",
+      insertTpl: '${key}',
+      delay: 400
+    }
+
+    $inputor = $('#inputor').atwho(question_config).atwho(answer_config);
+    $inputor.caret('pos', 47);
+    $inputor.focus().atwho('run');
+
+  });
+
+  </script>
+
+  <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+  <style type="text/css">
+    html, body {
+      background:#F9F9F9;
+      padding: 0;
+      margin: 0;
+      font: 14px/1.6 "Lucida Grande", "Helvetica", sans-serif;
+      color: #333;
+    }
+    h1,h2,h3,h4 {
+      font-family: 'PT Sans', sans-serif;
+      line-height: 40px;
+      color: inherit;
+      font-weight: bold;
+      margin: 10px 0;
+      text-rendering: optimizelegibility;
+    }
+    h2,h3 {
+      color: gray;
+    }
+    strong {
+      color: #424242;
+    }
+
+    a {
+      color: #4183C4;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .wrapper {
+      width: 750px;
+      padding: 20px;
+      margin: 0 auto;
+    }
+    header {
+      margin-top:70px;
+      margin-bottom: 50px;
+    }
+    header h1 {
+      text-align: center;
+      font-size: 75px;
+    }
+    h1 i {
+      color: rgb(182, 180, 180);
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    .inputor {
+      height: 160px;
+      width: 90%;
+      border: 1px solid #dadada;
+      border-radius: 4px;
+      padding: 5px 8px;
+      outline: 0 none;
+      margin: 10px 0;
+      background: white;
+      font-size: inherit;
+      overflow-y: scroll;
+    }
+    .inputor:focus {
+      border: 1px solid rgb(6, 150, 247);
+    }
+
+    ul.doc {
+      list-style:none;
+    }
+    ul.doc li {
+      display:inline-block;
+      margin: 0 10px;
+    }
+
+    footer {
+      margin: 30px 0;
+    }
+
+    .github {
+      text-align: center;
+    }
+
+  </style>
+
+</head>
+<body>
+  <div class="container wrapper">
+    <header>
+      <h1>GIFT<i>Autosuggestion</i></h1>
+    </header>
+    <div id="main">
+      <div>
+        <textarea id="inputor" class="inputor"></textarea>
+      </div>
+      <footer>
+        <h2>
+          <p>Utilisez :<br>:: pour afficher des gabarits de questions<br>{ &nbsp;pour afficher des gabarits de r&eacute;ponses</p>
+        </h2>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
+
